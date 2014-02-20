@@ -1,0 +1,54 @@
+#include "ID20Reader.h"
+#include <SoftwareSerial.h>
+SoftwareSerial RFID = SoftwareSerial(4,5);
+ 
+char character;
+String our_id;
+ int ledPin=2;
+void setup() {
+  pinMode(ledPin,OUTPUT);
+  Serial.begin(9600);
+  RFID.begin(9600);
+}
+  
+void loop() {
+   
+  while(RFID.available()>0)
+  {
+    character = RFID.read();
+    our_id += character;
+  }
+   
+   
+   if (our_id.length() == 10) {
+    our_id = our_id.substring(1,13);
+    Serial.println("smith");
+      if (our_id == "6F 00 5C 83 87")
+      {  
+        digitalWrite(ledPin,HIGH);
+        Serial.print("ERIC");  
+        Serial.print("ACCESS GRANTED  (id: ");
+        Serial.print(our_id);
+        our_id = "";
+        Serial.println( "ERIC" );
+       }
+       else if(our_id == "6F005C9375")
+       {
+         Serial.print("RONALD");  
+        Serial.print("ACCESS GRANTED  (id: ");
+        Serial.print(our_id);
+        our_id = "";
+        Serial.println(" ) ");
+       }
+       else 
+       {
+        Serial.print("ACCESS DENIED   (id: ");
+        Serial.print(our_id);
+        our_id = "";
+        Serial.println(" ) ");
+      }
+   } 
+  
+    our_id = "";
+    delay(1000);
+}
